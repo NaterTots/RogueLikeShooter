@@ -20,5 +20,37 @@ public class SpriteTest : MonoBehaviour
 		{
 			GameController.GetController<SoundController>().PlayClipOneShot(soundEffect);
 		}
+
+		GameController.GetController<InputController>().AddKeyCodeListener(KeyCode.T, OnToggleRotation);
+	}
+
+	void OnRotateLeft()
+	{
+		gameObject.transform.Rotate(0, 0, 90, Space.Self);
+	}
+
+	void OnRotateRight()
+	{
+		gameObject.transform.Rotate(0, 0, -90, Space.Self);
+	}
+
+	bool canRotate = false;
+
+	void OnToggleRotation()
+	{
+		if (!canRotate)
+		{
+			GameController.GetController<InputController>().AddKeyCodeListener(KeyCode.G, OnRotateLeft);
+			GameController.GetController<InputController>().AddKeyCodeListener(KeyCode.H, OnRotateRight);
+
+			canRotate = true;
+		}
+		else
+		{
+			GameController.GetController<InputController>().RemoveKeyCodeListener(KeyCode.G, OnRotateLeft);
+			GameController.GetController<InputController>().RemoveKeyCodeListener(KeyCode.H, OnRotateRight);
+
+			canRotate = false;
+		}
 	}
 }
