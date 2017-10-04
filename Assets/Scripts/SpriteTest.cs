@@ -27,11 +27,13 @@ public class SpriteTest : MonoBehaviour
 	void OnRotateLeft()
 	{
 		gameObject.transform.Rotate(0, 0, 90, Space.Self);
+		GameController.GetController<ConfigurationController>().GetSetting(SingleGameStats.Points).IncrementValueAsLong(10L);
 	}
 
 	void OnRotateRight()
 	{
 		gameObject.transform.Rotate(0, 0, -90, Space.Self);
+		GameController.GetController<ConfigurationController>().GetSetting(SingleGameStats.Points).IncrementValueAsLong(-10L);
 	}
 
 	bool canRotate = false;

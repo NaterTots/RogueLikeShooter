@@ -51,7 +51,9 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 				}
 				else
 				{
-					GameController.GetController<ConfigurationController>().AddSetting(new Setting(settingData.name, settingData.value, settingData.GetDataType()));
+					var newSetting = new Setting(settingData.name, settingData.value, settingData.GetDataType());
+					newSetting.PersistAcrossSessions = true;
+					GameController.GetController<ConfigurationController>().AddSetting(newSetting);
 				}
 			}
 		}
@@ -100,6 +102,11 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 	public void AddSetting(Setting s)
 	{
 		_settings.Add(s.Name, s);
+	}
+
+	public void RemoveSetting(string name)
+	{
+		_settings.Remove(name);
 	}
 
 	public bool Exists(string name)
@@ -155,6 +162,7 @@ public class Setting
 	public string Name { get; set; }
 	public UnityEvent OnChangedEvent { get; set; }
 	public SettingDataType DataType { get; set; }
+	public bool PersistAcrossSessions { get; set; }
 
 	private long? valueAsLong;
 	private string valueAsString;
@@ -206,7 +214,14 @@ public class Setting
 				valueAsString = initValue as string;
 				break;
 		}
-		OnChangedEvent = new UnityEvent();
+		if (OnChangedEvent == null)
+		{
+			OnChangedEvent = new UnityEvent();
+		}
+		else
+		{
+			OnChangedEvent.Invoke();
+		}
 	}
 
 	public void SetValue(string s, SettingDataType dataType)
@@ -224,7 +239,14 @@ public class Setting
 				valueAsString = s;
 				break;
 		}
-		OnChangedEvent = new UnityEvent();
+		if (OnChangedEvent == null)
+		{
+			OnChangedEvent = new UnityEvent();
+		}
+		else
+		{
+			OnChangedEvent.Invoke();
+		}
 	}
 
 	public float GetValueAsFloat()
@@ -249,11 +271,26 @@ public class Setting
 		return valueAsString;
 	}
 
+	public long IncrementValueAsLong(long value)
+	{
+		valueAsLong = valueAsLong.GetValueOrDefault() + value;
+		OnChangedEvent.Invoke();
+		return valueAsLong.GetValueOrDefault();
+	}
+
+	public float IncrementValueAsFloat(float value)
+	{
+		valueAsFloat = valueAsFloat.GetValueOrDefault() + value;
+		OnChangedEvent.Invoke();
+		return valueAsFloat.GetValueOrDefault();
+	}
+
 	public void ResetValue()
 	{
 		valueAsFloat = 0.0f;
 		valueAsLong = 0L;
 		valueAsString = string.Empty;
+		OnChangedEvent.Invoke();
 	}
 
 	public void AddChangedEventListener(UnityAction action)
@@ -302,7 +339,7 @@ public class Setting
 		}
 	}
 
-	public static Setting LoadFromPlayerPrefs(string name, SettingDataType type)
+	public static Setting LoadFromPlayerPrefs(string name, SettingDataType type, bool persistAcrossSessions = true)
 	{
 		Setting newSetting = null;
 		switch(type)
@@ -317,6 +354,7 @@ public class Setting
 				newSetting = new Setting(name, PlayerPrefs.GetFloat(name));
 				break;
 		}
+		newSetting.PersistAcrossSessions = persistAcrossSessions;
 		return newSetting;
 	}
 }
