@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3544932738
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: spriteassetbundle
+      Dependencies: {}
