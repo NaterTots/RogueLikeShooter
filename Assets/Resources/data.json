@@ -1,0 +1,14 @@
+{
+  "settings": [
+    {
+      "name": "Volume",
+      "datatype": 0,
+      "value": "100"
+    },
+    {
+      "name": "FullScreen",
+      "datatype": 0,
+      "value": "1"
+    }	
+  ]
+}
