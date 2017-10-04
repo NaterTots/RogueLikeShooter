@@ -12,4 +12,13 @@ public class SpriteTest : MonoBehaviour
 			GetComponent<SpriteRenderer>().sprite = newSprite;
 		}
 	}
+
+	void Start()
+	{
+		AudioClip soundEffect;
+		if (GameController.GetController<ResourceController>().TryGetSoundEffect("testsoundeffect", out soundEffect))
+		{
+			GameController.GetController<SoundController>().PlayClipOneShot(soundEffect);
+		}
+	}
 }

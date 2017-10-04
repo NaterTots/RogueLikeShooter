@@ -1,10 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ConfigurationController : MonoBehaviour , IPersistedController 
 {
+	private const string DataFileName = "data";
+
+	public bool loadFromPlayerPrefs = false;
+	public bool saveToPlayerPrefs = true;
+
+	Dictionary<string, Setting> _settings = new Dictionary<string, Setting>();
+
+	private bool hasBeenLoaded = false;
+
 	void Awake()
 	{
 		GameController.AddController(this);
@@ -13,7 +23,10 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 	// Use this for initialization
 	void Start () 
 	{
-		
+		if (!hasBeenLoaded)
+		{
+			LoadSettings();
+		}
 	}
 	
 	// Update is called once per frame
@@ -22,7 +35,46 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		
 	}
 
-	Dictionary<string, Setting> _settings = new Dictionary<string, Setting>();
+	private void LoadSettings()
+	{
+		TextAsset dataFile = Resources.Load(DataFileName) as TextAsset;
+		ConfigurationData configData = JsonUtility.FromJson<ConfigurationData>(dataFile.text);
+
+		foreach (string configSettingName in Enum.GetNames(typeof(ConfigurationSettings)))
+		{
+			SettingData settingData;
+			if (configData.TryGetSettingByName(configSettingName, out settingData))
+			{
+				if (loadFromPlayerPrefs && PlayerPrefs.HasKey(configSettingName))
+				{
+					GameController.GetController<ConfigurationController>().AddSetting(Setting.LoadFromPlayerPrefs(configSettingName, settingData.GetDataType()));
+				}
+				else
+				{
+					GameController.GetController<ConfigurationController>().AddSetting(new Setting(settingData.name, settingData.value, settingData.GetDataType()));
+				}
+			}
+		}
+
+		hasBeenLoaded = true;
+
+		foreach (Setting s in GameController.GetController<ConfigurationController>().GetAllSettings())
+		{
+			Debug.LogWarning(s.Name + ": " + s.GetValueAsString());
+		}
+	}
+
+	void OnDestroy()
+	{
+		if (saveToPlayerPrefs)
+		{
+			foreach (Setting s in GameController.GetController<ConfigurationController>().GetAllSettings())
+			{
+				s.SaveToPlayerPrefs();
+			}
+			PlayerPrefs.Save();
+		}
+	}
 
 	public Setting AddSetting(string name, long value)
 	{
@@ -38,7 +90,7 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		return newSetting;
 	}
 
-	public Setting AddSetting(string name, double value)
+	public Setting AddSetting(string name, float value)
 	{
 		Setting newSetting = new Setting(name, value);
 		_settings.Add(name, newSetting);
@@ -52,12 +104,32 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 
 	public bool Exists(string name)
 	{
+		if (!hasBeenLoaded)
+		{
+			LoadSettings();
+		}
+
 		return _settings.ContainsKey(name);
 	}
 
 	public Setting GetSetting(string name)
 	{
+		if (!hasBeenLoaded)
+		{
+			LoadSettings();
+		}
+
 		return _settings[name];
+	}
+
+	public bool Exists(ConfigurationSettings configSetting)
+	{
+		return Exists(Enum.GetName(typeof(ConfigurationSettings), configSetting));
+	}
+
+	public Setting GetSetting(ConfigurationSettings configSetting)
+	{
+		return GetSetting(Enum.GetName(typeof(ConfigurationSettings), configSetting));
 	}
 
 	public void AddListenerToSettingChanged(string name, UnityAction action)
@@ -86,13 +158,13 @@ public class Setting
 
 	private long? valueAsLong;
 	private string valueAsString;
-	private double? valueAsDouble;
+	private float? valueAsFloat;
 
 	public enum SettingDataType
 	{
 		Long = 0,
 		String = 1,
-		Double = 2
+		Float = 2
 	};
 
 	public Setting(string name, long val)
@@ -113,10 +185,10 @@ public class Setting
 		SetValue(val, dataType);
 	}
 
-	public Setting(string name, double val)
+	public Setting(string name, float val)
 	{
 		Name = name;
-		SetValue<double>(val);
+		SetValue<float>(val);
 	}
 
 	public void SetValue<T>(T initValue)
@@ -124,8 +196,8 @@ public class Setting
 		DataType = GetDataType(typeof(T));
 		switch(DataType)
 		{
-			case SettingDataType.Double:
-				valueAsDouble = initValue as double?;
+			case SettingDataType.Float:
+				valueAsFloat = initValue as float?;
 				break;
 			case SettingDataType.Long:
 				valueAsLong = initValue as long?;
@@ -134,6 +206,7 @@ public class Setting
 				valueAsString = initValue as string;
 				break;
 		}
+		OnChangedEvent = new UnityEvent();
 	}
 
 	public void SetValue(string s, SettingDataType dataType)
@@ -141,8 +214,8 @@ public class Setting
 		DataType = dataType;
 		switch(DataType)
 		{
-			case SettingDataType.Double:
-				valueAsDouble = double.Parse(s);
+			case SettingDataType.Float:
+				valueAsFloat = float.Parse(s);
 				break;
 			case SettingDataType.Long:
 				valueAsLong = long.Parse(s);
@@ -151,11 +224,12 @@ public class Setting
 				valueAsString = s;
 				break;
 		}
+		OnChangedEvent = new UnityEvent();
 	}
 
-	public double GetValueAsDouble()
+	public float GetValueAsFloat()
 	{
-		return valueAsDouble.GetValueOrDefault();
+		return valueAsFloat.GetValueOrDefault();
 	}
 
 	public long GetValueAsLong()
@@ -167,8 +241,8 @@ public class Setting
 	{
 		switch(DataType)
 		{
-			case SettingDataType.Double:
-				return valueAsDouble.ToString();
+			case SettingDataType.Float:
+				return valueAsFloat.ToString();
 			case SettingDataType.Long:
 				return valueAsLong.ToString();
 		}
@@ -177,7 +251,7 @@ public class Setting
 
 	public void ResetValue()
 	{
-		valueAsDouble = 0d;
+		valueAsFloat = 0.0f;
 		valueAsLong = 0L;
 		valueAsString = string.Empty;
 	}
@@ -201,7 +275,7 @@ public class Setting
 		else if (t == typeof(float) ||
 				 t == typeof(double))
 		{
-			return SettingDataType.Double;
+			return SettingDataType.Float;
 		}
 
 		throw new System.Exception("Setting is not a valid data type");
@@ -219,8 +293,8 @@ public class Setting
 			case SettingDataType.Long:
 				PlayerPrefs.SetInt(Name, (int)valueAsLong.GetValueOrDefault());
 				break;
-			case SettingDataType.Double:
-				PlayerPrefs.SetFloat(Name, (float)valueAsDouble.GetValueOrDefault());
+			case SettingDataType.Float:
+				PlayerPrefs.SetFloat(Name, valueAsFloat.GetValueOrDefault());
 				break;
 			case SettingDataType.String:
 				PlayerPrefs.SetString(Name, valueAsString);
@@ -239,7 +313,7 @@ public class Setting
 			case SettingDataType.String:
 				newSetting = new Setting(name, PlayerPrefs.GetString(name));
 				break;
-			case SettingDataType.Double:
+			case SettingDataType.Float:
 				newSetting = new Setting(name, PlayerPrefs.GetFloat(name));
 				break;
 		}

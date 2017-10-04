@@ -1,7 +1,13 @@
 ManifestFileVersion: 0
-CRC: 3544932738
+CRC: 2955076007
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: spriteassetbundle
+      Dependencies: {}
+    Info_1:
+      Name: soundeffectsassetbundle
+      Dependencies: {}
+    Info_2:
+      Name: musicassetbundle
       Dependencies: {}

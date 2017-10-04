@@ -5,8 +5,9 @@ using System;
 
 public enum ConfigurationSettings
 {
-	Volume,
-	FullScreen
+	FullScreen,
+	SoundEffectsVolume,
+	MusicVolume
 }
 
 [Serializable]
