@@ -15,5 +15,20 @@
       "datatype": 2,
       "value": "1"
     }
-  ]
+  ],
+  "terrainconfiguration":
+  {
+  	  "World" :
+	  {
+	  	  "width" : 100,
+		  "height" : 100
+	  },
+	  "Biome" :
+	  {
+	  	  "floodFillIncrement" : 1,
+		  "biomeTypeCount" : 4,
+		  "biomeCount" : 100,
+		  "initialFloodFillAmount" : 3
+	  }
+  }
 }

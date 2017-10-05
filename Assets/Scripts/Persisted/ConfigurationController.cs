@@ -13,6 +13,12 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 
 	Dictionary<string, Setting> _settings = new Dictionary<string, Setting>();
 
+	public TerrainConfiguration TerrainConfig
+	{
+		get;
+		private set;
+	}
+
 	private bool hasBeenLoaded = false;
 
 	void Awake()
@@ -39,6 +45,7 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 	{
 		TextAsset dataFile = Resources.Load(DataFileName) as TextAsset;
 		ConfigurationData configData = JsonUtility.FromJson<ConfigurationData>(dataFile.text);
+		TerrainConfig = configData.terrainconfiguration;
 
 		foreach (string configSettingName in Enum.GetNames(typeof(ConfigurationSettings)))
 		{

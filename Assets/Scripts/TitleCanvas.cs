@@ -20,4 +20,9 @@ public class TitleCanvas : MonoBehaviour
 	{
 		GameController.GetController<GameStateEngine>().ChangeGameState(GameStateEngine.States.Playing);
 	}
+
+	public void OnGoToTerrainSandbox()
+	{
+		GameController.GetController<GameStateEngine>().ChangeGameState(GameStateEngine.States.TerrainSandbox);
+	}
 }
