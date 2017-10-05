@@ -4,12 +4,6 @@ using System.Collections;
 
 public class TerrainMap : MonoBehaviour
 {
-	internal struct MapSquareInfo
-	{
-		internal TerrainType type;
-		internal GameObject tile;
-	}
-
 	//for now, this is just a square
 	private MapSquareInfo[,] terrainMap;
 
@@ -38,22 +32,26 @@ public class TerrainMap : MonoBehaviour
 		FloodFillBiomes();
 
 		RefreshTerrainDisplay();
+
+		DisplayRandomBiome();
 	}
 
 	private void InitializeTerrainMap()
 	{
 		terrainMap = new MapSquareInfo[100, 100];
-		for (int x = 0; x < TerrainSize; x++)
+		for (int xMap = 0; xMap < TerrainSize; xMap++)
 		{
-			for (int y = 0; y < TerrainSize; y++)
+			for (int yMap = 0; yMap < TerrainSize; yMap++)
 			{
 				GameObject newTerrainTile = (GameObject)Instantiate(terrainTile);
 				newTerrainTile.transform.position = new Vector2(
-					x - (TerrainSize / 2),
-					y - (TerrainSize / 2));
+					xMap - (TerrainSize / 2),
+					yMap - (TerrainSize / 2));
 				newTerrainTile.transform.parent = this.gameObject.transform;
-				newTerrainTile.name = "Terrain Tile [" + x + ", " + y + "]";
-				terrainMap[x, y].tile = newTerrainTile;
+				newTerrainTile.name = "Terrain Tile [" + xMap + ", " + yMap + "]";
+				terrainMap[xMap, yMap] = new MapSquareInfo();
+				terrainMap[xMap, yMap].tile = newTerrainTile;
+				terrainMap[xMap, yMap].mapPoint = new TerrainMapPoint() { x = xMap, y = yMap };
 			}
 		}
 	}
@@ -114,6 +112,13 @@ public class TerrainMap : MonoBehaviour
 		}
 	}
 
+	public void DisplayRandomBiome()
+	{
+		int randomBiome = UnityEngine.Random.Range(0, biomes.Length);
+		Debug.LogWarning("Random Biome Displayed: " + randomBiome.ToString());
+		biomes[randomBiome].Display();
+	}
+
 	private TerrainMapPoint GetRandomEmptyPoint()
 	{
 		TerrainMapPoint randomPoint = new TerrainMapPoint();
@@ -147,18 +152,33 @@ public class TerrainMap : MonoBehaviour
 		}
 	}
 
-	public bool SetPoint(TerrainMapPoint point, TerrainType type)
+	//public bool SetPoint(TerrainMapPoint point, TerrainType type)
+	//{
+	//	if (GetTerrainType(point) != TerrainType.None)
+	//	{
+	//		return false;
+	//	}
+	//	else
+	//	{
+	//		terrainMap[point.x, point.y].type = type;
+	//	}
+
+	//	return true;
+	//}
+
+	public bool TrySetPointForBiome(TerrainMapPoint point, TerrainType type, out MapSquareInfo squareInfo)
 	{
 		if (GetTerrainType(point) != TerrainType.None)
 		{
+			squareInfo = null;
 			return false;
 		}
 		else
 		{
 			terrainMap[point.x, point.y].type = type;
+			squareInfo = terrainMap[point.x, point.y];
+			return true;
 		}
-
-		return true;
 	}
 
 	public bool IsValid(TerrainMapPoint point)
@@ -222,6 +242,13 @@ public class TerrainMap : MonoBehaviour
 			y = (int)(TerrainSize / 2)
 		};
 	}
+}
+
+public class MapSquareInfo
+{
+	public TerrainType type;
+	public GameObject tile;
+	public TerrainMapPoint mapPoint;
 }
 
 public struct TerrainMapPoint

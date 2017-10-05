@@ -6,9 +6,11 @@ using System.Collections.Generic;
 public class Biome
 {
 	private TerrainType terrainType;
-	private List<TerrainMapPoint> mapPoints = new List<TerrainMapPoint>();
+	private List<MapSquareInfo> mapSquareInfoPoints = new List<MapSquareInfo>();
 
 	private TerrainMap terrain;
+
+	public bool isDisplayed = false;
 
 	/// <summary>
 	/// Denotes when the Biome can no longer Flood Fills 
@@ -21,9 +23,12 @@ public class Biome
 	{
 		terrain = t;
 		terrainType = type;
-		terrain.SetPoint(initPoint, type);
 
-		mapPoints.Add(initPoint);
+		MapSquareInfo squareInfo;
+		if (terrain.TrySetPointForBiome(initPoint, type, out squareInfo))
+		{
+			mapSquareInfoPoints.Add(squareInfo);
+		}
 	}
 
 	public void FloodFill(int points)
@@ -42,7 +47,7 @@ public class Biome
 
 		do
 		{
-			if (FillFromPoint(mapPoints[floodFillIndex]))
+			if (FillFromPoint(mapSquareInfoPoints[floodFillIndex].mapPoint))
 			{
 				bSuccess = true;
 			}
@@ -50,7 +55,7 @@ public class Biome
 			{
 				floodFillIndex++;
 			}
-		} while (!bSuccess && (floodFillIndex < mapPoints.Count));
+		} while (!bSuccess && (floodFillIndex < mapSquareInfoPoints.Count));
 
 		if (!bSuccess)
 		{
@@ -61,10 +66,24 @@ public class Biome
 	public void Reset()
 	{
 		terrainType = TerrainType.None;
-		mapPoints.Clear();
+		mapSquareInfoPoints.Clear();
 
 		floodFillIndex = 0;
 		FloodComplete = false;
+		isDisplayed = false;
+	}
+
+	public void Display()
+	{
+		if (!isDisplayed)
+		{
+			Debug.LogWarning("Not yet displayed, displaying squares: " + mapSquareInfoPoints.Count.ToString());
+			foreach (MapSquareInfo squareInfo in mapSquareInfoPoints)
+			{
+				squareInfo.tile.GetComponent<TerrainTile>().Display();
+			}
+			isDisplayed = true;
+		}
 	}
 
 	private bool FillFromPoint(TerrainMapPoint point)
@@ -78,8 +97,11 @@ public class Biome
 			TerrainMapPoint nextPoint;
 			if (terrain.TryGetMapPoint(point, nextDirection, out nextPoint))
 			{
-				terrain.SetPoint(nextPoint, terrainType);
-				mapPoints.Add(nextPoint);
+				MapSquareInfo squareInfo;
+				if (terrain.TrySetPointForBiome(nextPoint, terrainType, out squareInfo))
+				{
+					mapSquareInfoPoints.Add(squareInfo);
+				}
 				return true;
 			}
 			else

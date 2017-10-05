@@ -29,6 +29,11 @@ public class TerrainGenerationCanvas : MonoBehaviour
 		terrain.GenerateTerrain();
 	}
 
+	public void OnDisplayBiome()
+	{
+		terrain.DisplayRandomBiome();
+	}
+
 	public void OnUIValueChanged()
 	{
 		int biomeTypeCount = (int)biomeTypeSlider.value;

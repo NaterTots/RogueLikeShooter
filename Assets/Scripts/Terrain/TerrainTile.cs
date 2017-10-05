@@ -12,10 +12,12 @@ public class TerrainTile : MonoBehaviour
 	public Sprite rock;
 	public Sprite empty;
 
+	TerrainType terrainType;
+
 	// Use this for initialization
 	void Start()
 	{
-
+		Hide();
 	}
 
 	// Update is called once per frame
@@ -26,6 +28,8 @@ public class TerrainTile : MonoBehaviour
 
 	public void Init(TerrainType type)
 	{
+		terrainType = type;
+
 		switch (type)
 		{
 			case TerrainType.Forest:
@@ -47,5 +51,15 @@ public class TerrainTile : MonoBehaviour
 				GetComponent<SpriteRenderer>().sprite = empty;
 				break;
 		}
+	}
+
+	public void Hide()
+	{
+		gameObject.SetActive(false);
+	}
+
+	public void Display()
+	{
+		gameObject.SetActive(true);
 	}
 }
