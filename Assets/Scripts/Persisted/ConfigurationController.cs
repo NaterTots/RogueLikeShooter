@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -77,7 +78,7 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 	{
 		if (saveToPlayerPrefs)
 		{
-			foreach (Setting s in GameController.GetController<ConfigurationController>().GetAllSettings())
+			foreach (Setting s in GameController.GetController<ConfigurationController>().GetAllSettings().Where(s => s.PersistAcrossSessions == true))
 			{
 				s.SaveToPlayerPrefs();
 			}
