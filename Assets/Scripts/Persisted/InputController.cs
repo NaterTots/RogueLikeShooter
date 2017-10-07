@@ -40,6 +40,11 @@ public class InputController : MonoBehaviour , IPersistedController
 		}
 	}
 
+	public Vector2 GetMouseLocation()
+	{
+		return (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+	}
+
 	private Dictionary<KeyCode, UnityEvent> _keyCodeListeners = new Dictionary<KeyCode, UnityEvent>();
 
 	public void AddKeyCodeListener(KeyCode code, UnityAction listener)
