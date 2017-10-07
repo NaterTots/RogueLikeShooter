@@ -30,5 +30,12 @@
 		  "biomeCount" : 100,
 		  "initialFloodFillAmount" : 3
 	  }
+  },
+  "playerconfiguration" :
+  {
+  	  "Movement" :
+	  {
+	  	  "speed" : 4.0
+	  }
   }
 }

@@ -20,6 +20,12 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		private set;
 	}
 
+	public PlayerConfiguration PlayerConfig
+	{
+		get;
+		private set;
+	}
+
 	private bool hasBeenLoaded = false;
 
 	void Awake()
@@ -47,6 +53,7 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		TextAsset dataFile = Resources.Load(DataFileName) as TextAsset;
 		ConfigurationData configData = JsonUtility.FromJson<ConfigurationData>(dataFile.text);
 		TerrainConfig = configData.terrainconfiguration;
+		PlayerConfig = configData.playerconfiguration;
 
 		foreach (string configSettingName in Enum.GetNames(typeof(ConfigurationSettings)))
 		{

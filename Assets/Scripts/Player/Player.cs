@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		inputController = GameController.GetController<InputController>();
+		playerSpeed = GameController.GetController<ConfigurationController>().PlayerConfig.Movement.speed;
 
 		renderingGameObject = transform.Find("PlayerRendering").gameObject;
 
