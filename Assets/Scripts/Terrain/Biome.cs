@@ -113,6 +113,11 @@ public class Biome
 		}
 	}
 
+	public MapSquareInfo GetRandomMapSquareInfo()
+	{
+		return mapSquareInfoPoints[UnityEngine.Random.Range(0, mapSquareInfoPoints.Count)];
+	}
+
 	private bool FillFromPoint(TerrainMapPoint point)
 	{
 		Direction exclusionList = Direction.None;

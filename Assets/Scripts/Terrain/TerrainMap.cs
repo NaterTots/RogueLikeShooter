@@ -11,7 +11,7 @@ public class TerrainMap : MonoBehaviour
 	private Biome[] biomes;
 
 	private List<Biome> biomePath = new List<Biome>();
-	private int currentBiome = 0;
+	private int currentBiome = -1;
 
 	public TerrainConfiguration TerrainConfig;
 
@@ -25,7 +25,7 @@ public class TerrainMap : MonoBehaviour
 		TerrainConfig = GameController.GetController<ConfigurationController>().TerrainConfig;
 
 		InitializeTerrainMap();
-		GenerateTerrain();
+		//GenerateTerrain();
 	}
 
 	public void GenerateTerrain()
@@ -118,6 +118,11 @@ public class TerrainMap : MonoBehaviour
 		}
 	}
 
+	public GameObject GetRandomTileOnCurrentBiome()
+	{
+		return biomePath[currentBiome].GetRandomMapSquareInfo().tile;
+	}
+
 	#region Biome Path
 
 	public void DisplayNextBiome()
@@ -138,11 +143,11 @@ public class TerrainMap : MonoBehaviour
 
 		if (BruteForceTryToFindPath())
 		{
-			biomePath[currentBiome].Display();
+			//biomePath[currentBiome].Display();
 		}
 		else
 		{
-			DisplayRandomBiome();
+			//DisplayRandomBiome();
 		}
 	}
 

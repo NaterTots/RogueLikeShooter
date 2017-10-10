@@ -27,7 +27,7 @@
 	  {
 	  	  "floodFillIncrement" : 1,
 		  "biomeTypeCount" : 4,
-		  "biomeCount" : 100,
+		  "biomeCount" : 50,
 		  "initialFloodFillAmount" : 3,
 		  "biomeSequencePerLevel" : 10
 	  }
