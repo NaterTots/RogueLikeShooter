@@ -28,7 +28,8 @@
 	  	  "floodFillIncrement" : 1,
 		  "biomeTypeCount" : 4,
 		  "biomeCount" : 100,
-		  "initialFloodFillAmount" : 3
+		  "initialFloodFillAmount" : 3,
+		  "biomeSequencePerLevel" : 10
 	  }
   },
   "playerconfiguration" :

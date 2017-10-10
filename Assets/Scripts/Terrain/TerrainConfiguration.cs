@@ -28,6 +28,9 @@ public class TerrainConfiguration
 
 		[Range(1, 10)]
 		public int initialFloodFillAmount = 3;
+
+		[Range(1, 100)]
+		public int biomeSequencePerLevel = 10;
 	}
 
 	public BiomeSettings Biome = new BiomeSettings();

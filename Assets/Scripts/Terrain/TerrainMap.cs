@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TerrainMap : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class TerrainMap : MonoBehaviour
 	private MapSquareInfo[,] terrainMap;
 
 	private Biome[] biomes;
+
+	private List<Biome> biomePath = new List<Biome>();
+	private int currentBiome = 0;
 
 	public TerrainConfiguration TerrainConfig;
 
@@ -33,7 +37,7 @@ public class TerrainMap : MonoBehaviour
 
 		RefreshTerrainDisplay();
 
-		DisplayRandomBiome();
+		ConstructBiomePath();
 	}
 
 	private void InitializeTerrainMap()
@@ -107,10 +111,135 @@ public class TerrainMap : MonoBehaviour
 		{
 			for (int y = 0; y < TerrainConfig.World.height; y++)
 			{
-				terrainMap[x, y].tile.GetComponent<TerrainTile>().Init(terrainMap[x, y].type);
+				var tile = terrainMap[x, y].tile.GetComponent<TerrainTile>();
+				tile.Init(terrainMap[x, y].type);
+				tile.Hide();
 			}
 		}
 	}
+
+	#region Biome Path
+
+	public void DisplayNextBiome()
+	{
+		currentBiome++;
+		if (biomePath.Count > currentBiome)
+		{
+			biomePath[currentBiome].Display();
+		}
+	}
+
+	private void ConstructBiomePath()
+	{
+		Debug.Log("Getting Biome Neighbors " + Time.realtimeSinceStartup.ToString());
+		GetBiomeNeighbors();
+		Debug.Log("Finished Getting Biome Neighbors " + Time.realtimeSinceStartup.ToString());
+
+
+		if (BruteForceTryToFindPath())
+		{
+			biomePath[currentBiome].Display();
+		}
+		else
+		{
+			DisplayRandomBiome();
+		}
+	}
+
+	private void GetBiomeNeighbors()
+	{
+		foreach (Biome b in biomes)
+		{
+			b.FindAllNeighbors(this);
+		}
+	}
+
+	private bool BruteForceTryToFindPath()
+	{
+		List<List<int>> biomeNodeSet = new List<List<int>>();
+		var firstNode = new List<int>();
+		for (int i = 0; i < biomes.Length; ++i)
+		{
+			firstNode.Add(biomes[i].BiomeID);
+		}
+		biomeNodeSet.Add(firstNode);
+
+		while (biomeNodeSet.Count > 0 && biomeNodeSet.Count < TerrainConfig.Biome.biomeSequencePerLevel)
+		{
+			if (!TryToAddNewNeighbor(biomeNodeSet))
+			{
+				RemoveLatestNode(biomeNodeSet);
+			}
+		}
+
+		if (biomeNodeSet.Count > 0)
+		{
+			foreach(var biomeNode in biomeNodeSet)
+			{
+				biomePath.Add(GetBiomeById(biomeNode[0]));
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	private bool TryToAddNewNeighbor(List<List<int>> biomePath)
+	{
+		List<int> nextNodeList = new List<int>();
+		foreach (int neighborId in GetBiomeById(biomePath[biomePath.Count - 1][0]).Neighbors)
+		{
+			if (!BiomeIsInCurrentPath(biomePath, neighborId))
+			{
+				nextNodeList.Add(neighborId);
+			}
+		}
+
+		if (nextNodeList.Count > 0)
+		{
+			biomePath.Add(nextNodeList);
+			return true;
+		}
+
+		return false;
+	}
+
+	private Biome GetBiomeById(int biomeid)
+	{
+		foreach(Biome b in biomes)
+		{
+			if (b.BiomeID == biomeid)
+			{
+				return b;
+			}
+		}
+		return null;
+	}
+
+	private void RemoveLatestNode(List<List<int>> biomePath)
+	{
+		int lastNode = biomePath.Count - 1;
+		biomePath[lastNode].RemoveAt(0);
+		if (biomePath[lastNode].Count == 0)
+		{
+			biomePath.RemoveAt(lastNode);
+		}
+	}
+
+	private bool BiomeIsInCurrentPath(List<List<int>> biomePath, int b)
+	{
+		foreach(var biomeSet in biomePath)
+		{
+			if (biomeSet[0] == b)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	#endregion Biome Path
 
 	public void DisplayRandomBiome()
 	{
@@ -152,21 +281,7 @@ public class TerrainMap : MonoBehaviour
 		}
 	}
 
-	//public bool SetPoint(TerrainMapPoint point, TerrainType type)
-	//{
-	//	if (GetTerrainType(point) != TerrainType.None)
-	//	{
-	//		return false;
-	//	}
-	//	else
-	//	{
-	//		terrainMap[point.x, point.y].type = type;
-	//	}
-
-	//	return true;
-	//}
-
-	public bool TrySetPointForBiome(TerrainMapPoint point, TerrainType type, out MapSquareInfo squareInfo)
+	public bool TrySetPointForBiome(TerrainMapPoint point, Biome biome, out MapSquareInfo squareInfo)
 	{
 		if (GetTerrainType(point) != TerrainType.None)
 		{
@@ -175,7 +290,8 @@ public class TerrainMap : MonoBehaviour
 		}
 		else
 		{
-			terrainMap[point.x, point.y].type = type;
+			terrainMap[point.x, point.y].biomeid = biome.BiomeID;
+			terrainMap[point.x, point.y].type = biome.TerrainType;
 			squareInfo = terrainMap[point.x, point.y];
 			return true;
 		}
@@ -196,7 +312,12 @@ public class TerrainMap : MonoBehaviour
 		return terrainMap[point.x, point.y].type;
 	}
 
-	public bool TryGetMapPoint(TerrainMapPoint point, Direction dir, out TerrainMapPoint newMapPoint)
+	public bool TryGetEmptyMapPoint(TerrainMapPoint point, Direction dir, out TerrainMapPoint newMapPoint)
+	{
+		return TryGetMapPoint(point, dir, true, out newMapPoint);
+	}
+
+	public bool TryGetMapPoint(TerrainMapPoint point, Direction dir, bool onlyIfEmpty, out TerrainMapPoint newMapPoint)
 	{
 		newMapPoint = new TerrainMapPoint()
 		{
@@ -220,7 +341,41 @@ public class TerrainMap : MonoBehaviour
 				break;
 		}
 
-		return IsValid(newMapPoint) && (GetTerrainType(newMapPoint) == TerrainType.None);
+		return (IsValid(newMapPoint) && (onlyIfEmpty ? (GetTerrainType(newMapPoint) == TerrainType.None) : true));
+	}
+
+	public bool TryGetSquareInfo(TerrainMapPoint point, Direction dir, out MapSquareInfo squareInfo)
+	{
+		squareInfo = null;
+
+		var newMapPoint = new TerrainMapPoint()
+		{
+			x = point.x,
+			y = point.y
+		};
+
+		switch (dir)
+		{
+			case Direction.Up:
+				++newMapPoint.x;
+				break;
+			case Direction.Down:
+				--newMapPoint.x;
+				break;
+			case Direction.Left:
+				--newMapPoint.y;
+				break;
+			case Direction.Right:
+				++newMapPoint.y;
+				break;
+		}
+
+		if (IsValid(newMapPoint))
+		{
+			squareInfo = terrainMap[newMapPoint.x, newMapPoint.y];
+		}
+
+		return (squareInfo != null);
 	}
 
 	public void ResetTerrain()
@@ -230,8 +385,15 @@ public class TerrainMap : MonoBehaviour
 			for (int y = 0; y < TerrainSize; y++)
 			{
 				terrainMap[x, y].type = TerrainType.None;
+				terrainMap[x, y].biomeid = 0;
 			}
 		}
+
+		biomePath.Clear();
+		currentBiome = 0;
+
+
+		RefreshTerrainDisplay();
 	}
 
 	public TerrainMapPoint GetCenterPoint()
@@ -249,6 +411,7 @@ public class MapSquareInfo
 	public TerrainType type;
 	public GameObject tile;
 	public TerrainMapPoint mapPoint;
+	public int biomeid;
 }
 
 public struct TerrainMapPoint

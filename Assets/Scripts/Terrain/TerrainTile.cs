@@ -17,7 +17,7 @@ public class TerrainTile : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		Hide();
+
 	}
 
 	// Update is called once per frame

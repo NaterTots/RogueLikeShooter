@@ -16,6 +16,9 @@ public class TerrainGenerationCanvas : MonoBehaviour
 	public Slider floodFillInitSlider;
 	public Text floodFillInitText;
 
+	public Slider biomeSequencePerLevelSlider;
+	public Text biomeSequencePerLevelText;
+
 	private TerrainMap terrain;
 
 	void Start()
@@ -31,7 +34,7 @@ public class TerrainGenerationCanvas : MonoBehaviour
 
 	public void OnDisplayBiome()
 	{
-		terrain.DisplayRandomBiome();
+		terrain.DisplayNextBiome();
 	}
 
 	public void OnUIValueChanged()
@@ -51,5 +54,9 @@ public class TerrainGenerationCanvas : MonoBehaviour
 		int floodFillInit = (int)floodFillInitSlider.value;
 		floodFillInitText.text = "Flood Fill Init: " + floodFillInit.ToString();
 		terrain.TerrainConfig.Biome.initialFloodFillAmount = floodFillInit;
+
+		int biomeSequencePerLevel = (int)biomeSequencePerLevelSlider.value;
+		biomeSequencePerLevelText.text = "Biome Sequence Per Level: " + biomeSequencePerLevel.ToString();
+		terrain.TerrainConfig.Biome.biomeSequencePerLevel = biomeSequencePerLevel;
 	}
 }
