@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TerrainSandbox.unity
     guid: 89d34fff6a0fd874797c883e37b23110
+  - enabled: 1
+    path: Assets/Scenes/NavMeshSandbox.unity
+    guid: 76eb8ecc489883d488bd6879ee97e717
