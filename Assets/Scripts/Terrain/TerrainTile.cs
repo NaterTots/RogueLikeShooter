@@ -6,11 +6,10 @@ public class TerrainTile : MonoBehaviour
 	public const int Width = 50;
 	public const int Height = 50;
 
-	public Sprite grass;
-	public Sprite lava;
-	public Sprite forest;
-	public Sprite rock;
-	public Sprite empty;
+	public Material grass;
+	public Material lava;
+	public Material forest;
+	public Material rock;
 
 	TerrainType terrainType;
 
@@ -33,22 +32,22 @@ public class TerrainTile : MonoBehaviour
 		switch (type)
 		{
 			case TerrainType.Forest:
-				GetComponent<SpriteRenderer>().sprite = forest;
+				GetComponent<MeshRenderer>().material = forest;
 				break;
 			case TerrainType.Grass:
-				GetComponent<SpriteRenderer>().sprite = grass;
+				GetComponent<MeshRenderer>().material = grass;
 				break;
 			case TerrainType.Lava:
-				GetComponent<SpriteRenderer>().sprite = lava;
+				GetComponent<MeshRenderer>().material = lava;
 				break;
 			case TerrainType.Rock:
-				GetComponent<SpriteRenderer>().sprite = rock;
+				GetComponent<MeshRenderer>().material = rock;
 				break;
 			case TerrainType.None:
-				GetComponent<SpriteRenderer>().sprite = empty;
+				GetComponent<MeshRenderer>().material = null;
 				break;
 			case TerrainType.Empty:
-				GetComponent<SpriteRenderer>().sprite = empty;
+				GetComponent<MeshRenderer>().material = null;
 				break;
 		}
 	}

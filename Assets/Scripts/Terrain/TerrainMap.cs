@@ -118,7 +118,7 @@ public class TerrainMap : MonoBehaviour
 		{
 			for (int y = 0; y < TerrainConfig.World.height; y++)
 			{
-				var tile = terrainMap[x, y].tile.GetComponent<TerrainTile3D>();
+				var tile = terrainMap[x, y].tile.GetComponent<TerrainTile>();
 				tile.Init(terrainMap[x, y].type);
 				tile.Hide();
 			}

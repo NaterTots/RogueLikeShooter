@@ -17,8 +17,6 @@ public class Biome
 
 	public bool isDisplayed = false;
 
-	private bool renderMode3D = true;
-
 	private List<int> neighbors = new List<int>();
 	public List<int> Neighbors
 	{
@@ -109,14 +107,7 @@ public class Biome
 			Debug.LogWarning("Not yet displayed, displaying squares: " + mapSquareInfoPoints.Count.ToString());
 			foreach (MapSquareInfo squareInfo in mapSquareInfoPoints)
 			{
-				if (renderMode3D)
-				{
-					squareInfo.tile.GetComponent<TerrainTile3D>().Display();
-				}
-				else
-				{
-					squareInfo.tile.GetComponent<TerrainTile>().Display();
-				}
+				squareInfo.tile.GetComponent<TerrainTile>().Display();
 			}
 			isDisplayed = true;
 		}

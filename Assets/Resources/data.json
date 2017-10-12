@@ -20,16 +20,16 @@
   {
   	  "World" :
 	  {
-	  	  "width" : 5,
-		  "height" : 5
+	  	  "width" : 10,
+		  "height" : 10
 	  },
 	  "Biome" :
 	  {
 	  	  "floodFillIncrement" : 1,
 		  "biomeTypeCount" : 4,
-		  "biomeCount" : 5,
+		  "biomeCount" : 10,
 		  "initialFloodFillAmount" : 3,
-		  "biomeSequencePerLevel" : 3
+		  "biomeSequencePerLevel" : 5
 	  }
   },
   "playerconfiguration" :

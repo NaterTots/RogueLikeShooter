@@ -40,10 +40,26 @@ public class InputController : MonoBehaviour , IPersistedController
 		}
 	}
 
-	public Vector2 GetMouseLocation()
+
+
+	#region Move
+
+	public bool IsAttemptSingleMove()
 	{
-		return (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		return Input.GetMouseButtonDown(0);
 	}
+
+	public bool IsSustainedMove()
+	{
+		return Input.GetMouseButton(1);
+	}
+
+	public Ray GetMoveAttemptRay()
+	{
+		return Camera.main.ScreenPointToRay(Input.mousePosition);
+	}
+
+	#endregion Move
 
 	private Dictionary<KeyCode, UnityEvent> _keyCodeListeners = new Dictionary<KeyCode, UnityEvent>();
 

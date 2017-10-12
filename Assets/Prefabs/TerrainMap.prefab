@@ -51,5 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3498fbe4b8e9d7a4ab428af208b45c33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  terrainTile: {fileID: 1233964297477446, guid: cc64d5d6da0ce194399ff7d70a95a056,
+  TerrainConfig:
+    World:
+      width: 100
+      height: 100
+    Biome:
+      floodFillIncrement: 1
+      biomeTypeCount: 4
+      biomeCount: 100
+      initialFloodFillAmount: 3
+      biomeSequencePerLevel: 10
+  TerrainSize: 100
+  terrainTile: {fileID: 1194149464666488, guid: 009b3dc411cf70942a3b9d47f5ca282d,
     type: 2}
