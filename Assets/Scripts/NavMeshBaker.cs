@@ -6,14 +6,14 @@ using UnityEngine.AI;
 public class NavMeshBaker : MonoBehaviour 
 {
 
-	//NavMeshSurface[] surfaces;
+	public NavMeshSurface[] surfaces;
 
-	//// Use this for initialization
-	//void Start () 
-	//{
-	//	for (int i = 0; i < surfaces.Length; i++)
-	//	{
-	//		surfaces[i].BuildNavMesh();
-	//	}
-	//}
+	// Use this for initialization
+	void Start()
+	{
+		for (int i = 0; i < surfaces.Length; i++)
+		{
+			surfaces[i].BuildNavMesh();
+		}
+	}
 }

@@ -5,9 +5,12 @@ using UnityEngine;
 public class Director : MonoBehaviour 
 {
 	public TerrainMap terrainMap;
-	public Player player;
+	public Transform player;
 
 	bool isInitialized = false;
+
+	float nextBiomeTimeDelay = 5.0f;
+	float nextBiomeTimer = 0.0f;
 
 	// Use this for initialization
 	void Start () 
@@ -20,14 +23,20 @@ public class Director : MonoBehaviour
 	{
 		if (!isInitialized)
 		{
+			isInitialized = true;
 			terrainMap.GenerateTerrain();
 
 			terrainMap.DisplayNextBiome();
+			nextBiomeTimer = nextBiomeTimeDelay;
 
-			var startingPosition = terrainMap.GetRandomTileOnCurrentBiome().GetComponent<Transform>();
-			player.transform.SetPositionAndRotation(startingPosition.position + Vector3.up * 3, Quaternion.identity);
+			player.position = terrainMap.GetRandomTileOnCurrentBiome().transform.position;
+		}
 
-			isInitialized = true;
+		nextBiomeTimer -= Time.deltaTime;
+		if (nextBiomeTimer <= 0.0f)
+		{
+			terrainMap.DisplayNextBiome();
+			nextBiomeTimer = nextBiomeTimeDelay;
 		}
 	}
 }

@@ -15,7 +15,7 @@ public class TerrainMap : MonoBehaviour
 
 	public TerrainConfiguration TerrainConfig;
 
-	public const long TerrainSize = 100;
+	public int TerrainSize = 100;
 
 	public GameObject terrainTile;
 
@@ -23,6 +23,7 @@ public class TerrainMap : MonoBehaviour
 	void Start()
 	{
 		TerrainConfig = GameController.GetController<ConfigurationController>().TerrainConfig;
+		TerrainSize = TerrainConfig.World.width;
 
 		InitializeTerrainMap();
 		//GenerateTerrain();
@@ -48,9 +49,15 @@ public class TerrainMap : MonoBehaviour
 			for (int yMap = 0; yMap < TerrainSize; yMap++)
 			{
 				GameObject newTerrainTile = (GameObject)Instantiate(terrainTile);
-				newTerrainTile.transform.position = new Vector2(
-					xMap - (TerrainSize / 2),
-					yMap - (TerrainSize / 2));
+				//newTerrainTile.transform.position = new Vector2(
+				//	xMap - (TerrainSize / 2),
+				//	yMap - (TerrainSize / 2));
+
+				newTerrainTile.transform.position = new Vector3(
+					((xMap - (TerrainSize / 2)) * 4),
+					0f,
+					((yMap - (TerrainSize / 2)) * 4));
+
 				newTerrainTile.transform.parent = this.gameObject.transform;
 				newTerrainTile.name = "Terrain Tile [" + xMap + ", " + yMap + "]";
 				terrainMap[xMap, yMap] = new MapSquareInfo();
@@ -111,7 +118,7 @@ public class TerrainMap : MonoBehaviour
 		{
 			for (int y = 0; y < TerrainConfig.World.height; y++)
 			{
-				var tile = terrainMap[x, y].tile.GetComponent<TerrainTile>();
+				var tile = terrainMap[x, y].tile.GetComponent<TerrainTile3D>();
 				tile.Init(terrainMap[x, y].type);
 				tile.Hide();
 			}
@@ -259,8 +266,8 @@ public class TerrainMap : MonoBehaviour
 
 		do
 		{
-			randomPoint.x = UnityEngine.Random.Range(0, 100);
-			randomPoint.y = UnityEngine.Random.Range(0, 100);
+			randomPoint.x = UnityEngine.Random.Range(0, TerrainSize);
+			randomPoint.y = UnityEngine.Random.Range(0, TerrainSize);
 		} while (GetTerrainType(randomPoint) != TerrainType.None);
 
 		return randomPoint;
