@@ -13,7 +13,7 @@ public class ResourceController : MonoBehaviour , IPersistedController
 	static string SpritesAssetBundlePath = "spriteassetbundle";
 	static string SoundEffectsBundlePath = "soundeffectsassetbundle";
 	static string MusicAssetBundlePath = "musicassetbundle";
-	static string PrefabAssetBundlePath = "prefabsassetbundle";
+	static string PrefabAssetBundlePath = "prefabassetbundle";
 
 	void Awake()
 	{

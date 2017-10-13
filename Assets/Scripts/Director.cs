@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Director : MonoBehaviour 
 {
 	public TerrainMap terrainMap;
 	public Transform player;
-	public GameObject[] enemyPrefabs;
+	public EnemyConfiguration[] enemyTypes;
 
 	bool isInitialized = false;
 
 	float nextBiomeTimeDelay = 5.0f;
 	float nextBiomeTimer = 0.0f;
-	
+
+	void Start()
+	{
+		enemyTypes = GameController.GetController<ConfigurationController>().EnemyConfig;
+	}
+
 	// Update is called once per frame
 	void Update () 
 	{
@@ -38,8 +44,12 @@ public class Director : MonoBehaviour
 		terrainMap.DisplayNextBiome();
 		nextBiomeTimer = nextBiomeTimeDelay;
 
-		GameObject newEnemy = (GameObject)Instantiate(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)]);
+		EnemyConfiguration nextEnemyType = enemyTypes[UnityEngine.Random.Range(0, enemyTypes.Length)];
+		GameObject newEnemy = (GameObject)Instantiate(nextEnemyType.Prefab);
+
+		newEnemy.GetComponent<NavMeshAgent>().speed = nextEnemyType.speed;
 		newEnemy.transform.position = terrainMap.GetRandomTileOnCurrentBiome().transform.position;
 		newEnemy.transform.parent = this.gameObject.transform;
+		newEnemy.name = nextEnemyType.name;
 	}
 }

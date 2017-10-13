@@ -38,5 +38,19 @@
 	  {
 	  	  "speed" : 4.0
 	  }
-  }
+  },
+  "enemyconfiguration" : [
+    {
+		"enemyid" : 1,
+		"name" : "Sphere Enemy",
+		"model" : "SphereEnemy",
+		"speed" : 2.0
+    },
+	{
+		"enemyid" : 2,
+		"name" : "Pyramid Enemy",
+		"model" : "PyramidEnemy",
+		"speed" : 1.0
+    }
+  ]
 }

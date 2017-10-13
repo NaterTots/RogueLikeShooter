@@ -16,6 +16,7 @@ public class ConfigurationData
 	public SettingData[] settings;
 	public TerrainConfiguration terrainconfiguration;
 	public PlayerConfiguration playerconfiguration;
+	public EnemyConfiguration[] enemyconfiguration;
 
 	public bool TryGetSettingByName(string name, out SettingData setting)
 	{

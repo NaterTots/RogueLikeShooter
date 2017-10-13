@@ -26,6 +26,12 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		private set;
 	}
 
+	public EnemyConfiguration[] EnemyConfig
+	{
+		get;
+		private set;
+	}
+
 	private bool hasBeenLoaded = false;
 
 	void Awake()
@@ -41,12 +47,6 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 			LoadSettings();
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () 
-	{
-		
-	}
 
 	private void LoadSettings()
 	{
@@ -54,6 +54,7 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		ConfigurationData configData = JsonUtility.FromJson<ConfigurationData>(dataFile.text);
 		TerrainConfig = configData.terrainconfiguration;
 		PlayerConfig = configData.playerconfiguration;
+		
 
 		foreach (string configSettingName in Enum.GetNames(typeof(ConfigurationSettings)))
 		{
@@ -79,6 +80,9 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 		{
 			Debug.LogWarning(s.Name + ": " + s.GetValueAsString());
 		}
+
+		EnemyConfig = configData.enemyconfiguration;
+		LoadEnemyPrefabs();
 	}
 
 	void OnDestroy()
@@ -90,6 +94,19 @@ public class ConfigurationController : MonoBehaviour , IPersistedController
 				s.SaveToPlayerPrefs();
 			}
 			PlayerPrefs.Save();
+		}
+	}
+
+	private void LoadEnemyPrefabs()
+	{
+		ResourceController resourceController = GameController.GetController<ResourceController>();
+		foreach (var enemyConfig in EnemyConfig)
+		{
+			GameObject prefab;
+			if (resourceController.TryGetPrefab(enemyConfig.model, out prefab))
+			{
+				enemyConfig.Prefab = prefab;
+			}
 		}
 	}
 

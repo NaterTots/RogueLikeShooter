@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 114080454303724920}
   - component: {fileID: 195327351371591146}
   m_Layer: 0
-  m_Name: TestEnemy2
+  m_Name: PyramidEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

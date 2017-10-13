@@ -1,0 +1,39 @@
+ManifestFileVersion: 0
+CRC: 1372344948
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: e9c89b6e9da35d7e68791c2ef3641cd4
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 6fec8f0329c2ee8643c9cb75e2d3c9b1
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: b55268aec2270b1478b4fc90f19bb432, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 195
+  Script: {instanceID: 0}
+Assets:
+- Assets/Assets/Prefabs/SphereEnemy.prefab
+- Assets/Assets/Prefabs/PyramidEnemy.prefab
+Dependencies: []
