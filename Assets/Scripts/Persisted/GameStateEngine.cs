@@ -12,6 +12,7 @@ public class GameStateEngine : MonoBehaviour, IPersistedController
 		Playing,
 		TerrainSandbox,
 		NavMeshSandbox,
+		PlayerSandbox,
 		GameOver,
 		Settings,
 		Credits
@@ -57,6 +58,7 @@ public class GameStateEngine : MonoBehaviour, IPersistedController
 			States.Playing,
 			States.TerrainSandbox,
 			States.NavMeshSandbox,
+			States.PlayerSandbox,
 			States.GameOver,
 			States.Settings,
 			States.Credits);

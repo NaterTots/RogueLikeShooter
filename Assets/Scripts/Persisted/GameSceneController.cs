@@ -35,6 +35,9 @@ public class GameSceneController : MonoBehaviour , IPersistedController
 			case GameStateEngine.States.NavMeshSandbox:
 				nextScene = "NavMeshSandbox";
 				break;
+			case GameStateEngine.States.PlayerSandbox:
+				nextScene = "PlayerSandbox";
+				break;
 			case GameStateEngine.States.GameOver:
 				nextScene = "Title";
 				break;
