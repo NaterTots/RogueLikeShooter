@@ -127,7 +127,8 @@ public class TerrainMap : MonoBehaviour
 
 	public GameObject GetRandomTileOnCurrentBiome()
 	{
-		return biomePath[currentBiome].GetRandomMapSquareInfo().tile;
+		int biomeForTile = (biomePath.Count > currentBiome ? currentBiome : biomePath.Count - 1);
+		return biomePath[biomeForTile].GetRandomMapSquareInfo().tile;
 	}
 
 	#region Biome Path

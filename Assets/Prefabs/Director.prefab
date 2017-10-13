@@ -53,3 +53,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   terrainMap: {fileID: 0}
   player: {fileID: 0}
+  enemyPrefabs:
+  - {fileID: 1471176060243954, guid: 5c97a90268804214ebebc0497e08a2ac, type: 2}
+  - {fileID: 1014220167333668, guid: 3783ef691a7a4364d92eaa43d8cf8905, type: 2}

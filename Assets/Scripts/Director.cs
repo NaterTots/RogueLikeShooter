@@ -6,17 +6,12 @@ public class Director : MonoBehaviour
 {
 	public TerrainMap terrainMap;
 	public Transform player;
+	public GameObject[] enemyPrefabs;
 
 	bool isInitialized = false;
 
 	float nextBiomeTimeDelay = 5.0f;
 	float nextBiomeTimer = 0.0f;
-
-	// Use this for initialization
-	void Start () 
-	{
-
-	}
 	
 	// Update is called once per frame
 	void Update () 
@@ -26,8 +21,7 @@ public class Director : MonoBehaviour
 			isInitialized = true;
 			terrainMap.GenerateTerrain();
 
-			terrainMap.DisplayNextBiome();
-			nextBiomeTimer = nextBiomeTimeDelay;
+			SpawnNextBiome();
 
 			player.position = terrainMap.GetRandomTileOnCurrentBiome().transform.position;
 		}
@@ -35,8 +29,17 @@ public class Director : MonoBehaviour
 		nextBiomeTimer -= Time.deltaTime;
 		if (nextBiomeTimer <= 0.0f)
 		{
-			terrainMap.DisplayNextBiome();
-			nextBiomeTimer = nextBiomeTimeDelay;
+			SpawnNextBiome();
 		}
+	}
+
+	void SpawnNextBiome()
+	{
+		terrainMap.DisplayNextBiome();
+		nextBiomeTimer = nextBiomeTimeDelay;
+
+		GameObject newEnemy = (GameObject)Instantiate(enemyPrefabs[UnityEngine.Random.Range(0, enemyPrefabs.Length)]);
+		newEnemy.transform.position = terrainMap.GetRandomTileOnCurrentBiome().transform.position;
+		newEnemy.transform.parent = this.gameObject.transform;
 	}
 }
