@@ -23,17 +23,21 @@ public class Enemy : MonoBehaviour
 		agent.SetDestination(target.transform.position);
 	}
 
-	public void TakeDamage(int damage)
+	public void TakeDamage(int damage, Vector3 collisionPoint)
 	{
 		Health -= damage;
 		if (Health <= 0)
 		{
 			Die();
 		}
+		else
+		{
+			agent.Move((transform.position - collisionPoint).normalized * 10.0f);
+		}
 	}
 
 	public void Die()
 	{
-		Destroy(this);
+		Destroy(this.gameObject);
 	}
 }

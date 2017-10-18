@@ -8,8 +8,11 @@ public class Player : MonoBehaviour
 	NavMeshAgent agent;
 
 	bool inSustainedMoveMode = false;
+	bool isAttacking = false;
 
 	private InputController inputController;
+
+	private Animation weaponAnimation;
 
 	void Start()
 	{
@@ -17,6 +20,9 @@ public class Player : MonoBehaviour
 		agent.speed = GameController.GetController<ConfigurationController>().PlayerConfig.Movement.speed;
 
 		inputController = GameController.GetController<InputController>();
+		inputController.AddKeyCodeListener(KeyCode.Space, OnSwing);
+
+		weaponAnimation = GetComponentInChildren<Animation>();
 	}
 
 	void Update()
@@ -37,5 +43,20 @@ public class Player : MonoBehaviour
 			agent.destination = transform.position;
 			inSustainedMoveMode = false;
 		}
+	}
+
+	void OnSwing()
+	{
+		if (!isAttacking)
+		{
+			isAttacking = true;
+
+			weaponAnimation.Play("SwordSwing");
+		}
+	}
+
+	public void OnSwingComplete()
+	{
+		isAttacking = false;
 	}
 }

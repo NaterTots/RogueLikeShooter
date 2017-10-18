@@ -24,9 +24,11 @@ GameObject:
   - component: {fileID: 95361150274252196}
   - component: {fileID: 114080454303724920}
   - component: {fileID: 195327351371591146}
+  - component: {fileID: 65003857635216326}
+  - component: {fileID: 54273045612301642}
   m_Layer: 0
   m_Name: PyramidEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,6 +85,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1014220167333668}
   m_Mesh: {fileID: 4300000, guid: 07b2a54e8e33fa540a4b18920194e0d9, type: 3}
+--- !u!54 &54273045612301642
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1014220167333668}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &65003857635216326
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1014220167333668}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1.414214, z: 2}
+  m_Center: {x: 0, y: 0.424264, z: 0.282843}
 --- !u!95 &95361150274252196
 Animator:
   serializedVersion: 3

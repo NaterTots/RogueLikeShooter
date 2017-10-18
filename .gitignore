@@ -63,3 +63,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 *.ide
+
+# Blender backups
+*.blend1
+*.blend1.meta

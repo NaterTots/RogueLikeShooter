@@ -51,5 +51,6 @@ public class Director : MonoBehaviour
 		newEnemy.transform.position = terrainMap.GetRandomTileOnCurrentBiome().transform.position;
 		newEnemy.transform.parent = this.gameObject.transform;
 		newEnemy.name = nextEnemyType.name;
+		newEnemy.GetComponent<Enemy>().Health = 10;
 	}
 }
